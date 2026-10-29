@@ -1,24 +1,24 @@
-# MCP for Google Ads 🚀
+# MCP for Google Ads ðŸš€
 **The World-Class Media Buyer, Funnel Strategy & Unit Economics Engine for Google Ads**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![Protocol](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green)](https://modelcontextprotocol.io/)
 
-**MCP for Google Ads** is an autonomous Model Context Protocol (MCP) server engineered by **Edd Vásquez** for AI coding assistants (Claude Desktop, OpenAI Codex, Antigravity) to act as senior media buyers, acquisition strategists, and unit economics auditors.
+**MCP for Google Ads** is an autonomous Model Context Protocol (MCP) server engineered by **Edd VÃ¡squez** for AI coding assistants (Claude Desktop, OpenAI Codex, Antigravity) to act as senior media buyers, acquisition strategists, and unit economics auditors.
 
-Unlike minimal query wrappers, this engine provides a complete **34-tool operating system** combining deterministic mutations under Two-Phase Commit safety, auction quality scoring, orphaned negative governance, algorithmic bidding maturity audits, and closed-loop CRM qualification tracking.
+Unlike minimal query wrappers, this engine provides a complete **37-tool operating system** combining deterministic mutations under Two-Phase Commit safety, auction quality scoring, orphaned negative governance, algorithmic bidding maturity audits, and closed-loop CRM qualification tracking.
 
 ---
 
-## 🛠️ Complete 34-Tool Catalog
+## ðŸ› ï¸ Complete 37-tool Catalog
 
 ### 1. Account Discovery & Direct GAQL (3 Tools)
 - `customers_list_accessible_customers`: Retrieve accessible Google Ads customer IDs.
 - `search_search`: Structured Google Ads Query Language (GAQL) query execution.
 - `metadata_get_resource_metadata`: Discover selectable fields, metrics, and segments for resources.
 
-### 2. Transactional Mutation Engine — Two-Phase Commit (12 Tools)
+### 2. Transactional Mutation Engine â€” Two-Phase Commit (12 Tools)
 - `editing_prepare_campaign`: Budget, status, bidding strategy changes.
 - `editing_prepare_ad_group`: Ad group creation, status, and target CPA overrides.
 - `editing_prepare_ad`: Responsive Search Ad (RSA) creation with multi-headline/description validation.
@@ -32,7 +32,7 @@ Unlike minimal query wrappers, this engine provides a complete **34-tool operati
 - `editing_cancel_proposal`: Abort and discard draft proposal.
 - `editing_reconcile_proposal`: Sync and reconcile executed changes.
 
-### 3. Media Buying Intelligence, Unit Economics & Funnel Strategy (19 Tools)
+### 3. Media Buying Intelligence, Unit Economics & Funnel Strategy (22 Tools)
 - `intelligence_audit_search_terms`: Mine bleeding search terms and quantify wasted spend.
 - `intelligence_prepare_mined_negatives`: Convert wasted search queries directly into negative keyword proposals.
 - `intelligence_analyze_impression_share`: Lost IS to Budget vs. Lost IS to Rank breakdown.
@@ -55,8 +55,12 @@ Unlike minimal query wrappers, this engine provides a complete **34-tool operati
 
 ---
 
-## 🔒 Legal Notice & Trademark Disclaimer
+## ðŸ”’ Legal Notice & Trademark Disclaimer
 
-* **Author:** Edd Vásquez. All rights reserved.
+* **Author:** Edd VÃ¡squez. All rights reserved.
 * **Disclaimer:** *MCP for Google Ads* is an independent open-source project. It is **not** affiliated with, endorsed by, or sponsored by Google LLC. *Google Ads* is a registered trademark of Google LLC.
 * **License:** Apache License 2.0. See [LICENSE](LICENSE) for details.
+
+- intelligence_audit_landing_page_message_match: Scrapes and compares destination H1/H2/CTA against active RSA headlines to detect post-click friction.
+- intelligence_upload_offline_conversion_call: Upload offline qualified calls/sales with GCLID and real revenue to cure Algorithmic Poisoning.
+- intelligence_simulate_budget_scaling_elasticity: Models Lost IS (Budget vs. Rank) and CPC elasticity before scaling spend.
