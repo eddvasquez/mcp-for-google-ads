@@ -16,6 +16,7 @@
 
 import os
 
+from ads_mcp import autoupdate
 from ads_mcp.coordinator import mcp
 
 # The following imports are necessary to register the resources with the `mcp`
@@ -32,6 +33,12 @@ from ads_mcp.resources import (
 
 
 def run_server() -> None:
+    # Check for periodic background updates (throttled by TTL, zero tokens consumed)
+    try:
+        autoupdate.check_and_apply_update()
+    except Exception:
+        pass
+
     _CLIENT_ID = os.environ.get("GOOGLE_ADS_MCP_OAUTH_CLIENT_ID")
     _CLIENT_SECRET = os.environ.get("GOOGLE_ADS_MCP_OAUTH_CLIENT_SECRET")
     port = int(os.environ.get("PORT", "8080"))
