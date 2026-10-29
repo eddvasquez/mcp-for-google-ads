@@ -1,58 +1,57 @@
 @echo off
 chcp 65001 >nul
-title Sincronizador de Skills con _ai-skills-hub
-set HUB_DIR=C:\Users\PC\Documents\ChatGPT\_ai-skills-hub
-set LOCAL_SKILLS=%~dp0skills
+setlocal EnableDelayedExpansion
 
-echo =======================================================
-echo          SINCRONIZADOR DE SKILLS CON HUB GLOBAL        
-echo =======================================================
-echo Hub central: %HUB_DIR%
-echo Skills locales: %LOCAL_SKILLS%
-echo.
-echo [1] PULL - Traer/actualizar skills desde _ai-skills-hub
-echo [2] PUSH - Publicar skills nuevas/modificadas hacia _ai-skills-hub
-echo [3] Salir
-echo.
-set /p OPTION=Selecciona una opcion (1, 2 o 3): 
+set "HUB_DIR=C:\Users\PC\Documents\ChatGPT\_ai-skills-hub"
+set "PROJECT_SKILLS=%~dp0skills"
 
-if "%OPTION%"=="1" goto PULL
-if "%OPTION%"=="2" goto PUSH
-goto END
+if not exist "%HUB_DIR%" (
+    echo [ERROR] No se encontro el Hub central de skills en: %HUB_DIR%
+    pause
+    exit /b 1
+)
+
+if not exist "%PROJECT_SKILLS%" (
+    mkdir "%PROJECT_SKILLS%"
+)
+
+:MENU
+cls
+echo ===============================================================
+echo            SINCRONIZACION CON _AI-SKILLS-HUB
+echo ===============================================================
+echo [1] PULL - Traer skills actualizadas desde _ai-skills-hub
+echo [2] PUSH - Publicar skills locales nuevas/modificadas hacia el Hub
+echo [3] SALIR
+echo ===============================================================
+set /p OPT="Seleccione una opcion [1-3]: "
+
+if "%OPT%"=="1" goto PULL
+if "%OPT%"=="2" goto PUSH
+if "%OPT%"=="3" exit /b 0
+echo Opcion invalida.
+pause
+goto MENU
 
 :PULL
 echo.
-echo [EJECUTANDO PULL DESDE HUB...]
-if not exist "%LOCAL_SKILLS%" mkdir "%LOCAL_SKILLS%"
-robocopy "%HUB_DIR%" "%LOCAL_SKILLS%" /E /XO /XD .git /XF README.md .gitignore
+echo Sincronizando: Hub -> Proyecto local...
+robocopy "%HUB_DIR%" "%PROJECT_SKILLS%" /E /XO /XD .git /XF README.md .gitignore
 echo.
-echo Pull completado exitosamente.
-goto END
+echo [OK] Pull finalizado con exito.
+pause
+goto MENU
 
 :PUSH
 echo.
-echo [EJECUTANDO PUSH HACIA HUB...]
-if not exist "%HUB_DIR%" (
-    echo ERROR: No se encuentra la carpeta %HUB_DIR%
-    goto END
-)
-robocopy "%LOCAL_SKILLS%" "%HUB_DIR%" /E /XO /XD .git /XF README.md .gitignore
+echo Sincronizando: Proyecto local -> Hub...
+robocopy "%PROJECT_SKILLS%" "%HUB_DIR%" /E /XO /XD .git /XF README.md .gitignore
 echo.
-echo Registrando cambios en Git de _ai-skills-hub...
+echo Guardando cambios en el Hub central...
 pushd "%HUB_DIR%"
 git add .
-git status --porcelain | findstr . >nul
-if %errorlevel% equ 0 (
-    git commit -m "feat(skills): sincronizar skills desde proyecto local"
-    echo Commit registrado en _ai-skills-hub.
-) else (
-    echo No hay cambios pendientes en _ai-skills-hub.
-)
+git commit -m "feat(skills): actualizacion de skills compartidas desde %~n0"
 popd
-echo.
-echo Push completado exitosamente.
-goto END
-
-:END
-echo.
+echo [OK] Push completado exitosamente.
 pause
+goto MENU

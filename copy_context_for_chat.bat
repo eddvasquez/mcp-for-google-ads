@@ -1,17 +1,36 @@
 @echo off
 chcp 65001 >nul
-title Empaquetador de Contexto para Chat
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$output = New-Object System.Text.StringBuilder; " ^
-  "[void]$output.AppendLine('==================== AGENTS.MD ===================='); " ^
-  "if (Test-Path 'AGENTS.md') { [void]$output.AppendLine((Get-Content 'AGENTS.md' -Raw)) }; " ^
-  "[void]$output.AppendLine('`n==================== CONTEXTO (.context/*) ===================='); " ^
-  "if (Test-Path '.context') { Get-ChildItem '.context' -File | ForEach-Object { [void]$output.AppendLine('--- ' + $_.Name + ' ---'); [void]$output.AppendLine((Get-Content $_.FullName -Raw)); [void]$output.AppendLine('') } }; " ^
-  "[void]$output.AppendLine('==================== SKILLS DISPONIBLES ===================='); " ^
-  "if (Test-Path 'skills') { Get-ChildItem 'skills' -Directory | ForEach-Object { [void]$output.AppendLine('- ' + $_.Name) } }; " ^
-  "[void]$output.AppendLine('`n==================== GIT STATUS ===================='); " ^
-  "if (Test-Path '.git') { [void]$output.AppendLine((git status -s)) }; " ^
-  "$output.ToString() | Set-Clipboard; " ^
-  "Write-Host 'Contexto completo copiado exitosamente al portapapeles!' -ForegroundColor Green"
-echo.
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& {
+    $output = [System.Text.StringBuilder]::new()
+    [void]$output.AppendLine('=== ESTADO DEL REPOSITORIO (git status -s) ===')
+    $gitStatus = git status -s 2>&1
+    [void]$output.AppendLine(($gitStatus -join [Environment]::NewLine))
+    [void]$output.AppendLine('')
+
+    if (Test-Path 'AGENTS.md') {
+        [void]$output.AppendLine('=== ARCHIVO: AGENTS.md ===')
+        [void]$output.AppendLine([System.IO.File]::ReadAllText('AGENTS.md', [System.Text.Encoding]::UTF8))
+        [void]$output.AppendLine('')
+    }
+
+    if (Test-Path '.context') {
+        Get-ChildItem -Path '.context' -File | ForEach-Object {
+            [void]$output.AppendLine(\"=== ARCHIVO: .context/$($_.Name) ===\")
+            [void]$output.AppendLine([System.IO.File]::ReadAllText($_.FullName, [System.Text.Encoding]::UTF8))
+            [void]$output.AppendLine('')
+        }
+    }
+
+    if (Test-Path 'skills') {
+        [void]$output.AppendLine('=== SKILLS DISPONIBLES EN PROYECTO ===')
+        Get-ChildItem -Path 'skills' -Directory | ForEach-Object {
+            [void]$output.AppendLine(\"- $($_.Name)\")
+        }
+        [void]$output.AppendLine('')
+    }
+
+    $finalText = $output.ToString()
+    Set-Clipboard -Value $finalText
+    Write-Host '[OK] Contexto consolidado copiado al portapapeles exitosamente.' -ForegroundColor Green
+}"
 pause
