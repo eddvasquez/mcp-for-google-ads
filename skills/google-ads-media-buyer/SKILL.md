@@ -50,7 +50,16 @@ Opera como un Media Buyer de Clase Mundial, Especialista en Google Ads de Respue
 8. **Seguridad Two-Phase Commit & Two-Step Lifecycle (MCP):**
    - Prohibido aplicar mutaciones a ciegas. Siempre preparar (`prepare_keywords`, `prepare_negative_list`), validar en Google (`validate_only=true`) y aplicar con confirmación inmutable (`apply_proposal`).
    - Al agregar palabras clave (`action="add"`), Google las genera en `PAUSED`. Es obligatorio un segundo paso mediante `action="status"` con los `criterion_ids` para activarlas a `ENABLED`.
-9. **Regla Sintáctica de la API ($\le 10$ palabras):** Toda palabra clave positiva debe contener **máximo 10 palabras**. Si tiene 11 o más palabras, la API rechaza la transacción (`KEYWORD_HAS_TOO_MANY_WORDS`). Condensar el término antes de inyectarlo.
+9. **Regla Sintáctica y Validación Dura de la API (≤ 10 palabras):**
+   - Toda palabra clave (positiva o negativa) debe contener **como máximo 10 palabras**.
+   - El servidor MCP aplica validación preventiva inmediata (`@field_validator`) para evitar que consultas largas alcancen la API de Google Ads.
+10. **Gobernanza Semántica de Negativas (Escultura vs. Blindaje Macro):**
+   - **Nivel Grupo de Anuncios (`ad_group_id`):** Se utiliza EXCLUSIVAMENTE para **Traffic Sculpting** (redireccionar la intención de búsqueda hacia el grupo y anuncio más relevante, evitando la canibalización cruzada interna y maximizando el Quality Score).
+   - **Nivel Campaña o Listas Compartidas (`campaign_id` / `shared_set`):** Se utiliza EXCLUSIVAMENTE para **Protección Presupuestaria Macro** (blindar la cuenta contra *bleeders* universales, términos informacionales no transaccionales y fugas de presupuesto).
+11. **Offloading de Cómputo y Optimización de Tokens (Zero Token Waste):**
+   - En auditorías de Search Terms masivas o inyecciones de cientos de palabras clave, **nunca procesar datos pesados en el contexto del LLM**.
+   - Utilizar los scripts deterministas locales en `scripts/` (`prep_keywords_batch.py` y `prep_search_terms_audit.py`).
+   - El modelo actúa como **Estratega y Director de Orquesta**: revisa el resumen ejecutivo emitido por el script, valida la pertinencia del ángulo y supervisa la propuesta en el MCP.
 
 ---
 

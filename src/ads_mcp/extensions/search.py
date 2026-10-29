@@ -5,7 +5,7 @@ import os
 from typing import Literal
 
 from fastmcp.exceptions import ToolError
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from . import changes as ch
 
@@ -77,17 +77,39 @@ class Ad(Input):
 
 
 class Keyword(Input):
-    text: str = Field(min_length=1, max_length=80)
+    text: str = Field(
+        min_length=1,
+        max_length=80,
+        description="Keyword text. Cannot exceed 10 words (Google Ads hard constraint)."
+    )
     match_type: Match
     cpc_bid: str | None = None
+
+    @field_validator("text")
+    @classmethod
+    def validate_max_ten_words(cls, v: str) -> str:
+        cleaned = v.strip()
+        words = [w for w in cleaned.split() if w]
+        if len(words) > 10:
+            raise ValueError(
+                f"Google Ads hard constraint: Keywords cannot exceed 10 terms/words. "
+                f"Received {len(words)} words: '{cleaned}'"
+            )
+        return cleaned
 
 
 class Keywords(Input):
     action: Literal[
         "add", "update", "status", "add_negatives", "remove_negatives"
     ]
-    campaign_id: str | None = None
-    ad_group_id: str | None = None
+    campaign_id: str | None = Field(
+        default=None,
+        description="Campaign ID. For add_negatives, use campaign_id exclusively for macro budget protection (shielding against bleeders/waste across the entire campaign)."
+    )
+    ad_group_id: str | None = Field(
+        default=None,
+        description="Ad Group ID. For add_negatives, use ad_group_id exclusively for traffic sculpting (steering intent to the most relevant ad group and preventing internal cannibalization)."
+    )
     criterion_ids: list[str] = Field(default_factory=list)
     keywords: list[Keyword] = Field(default_factory=list)
     cpc_bid: str | None = None

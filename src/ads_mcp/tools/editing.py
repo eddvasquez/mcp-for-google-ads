@@ -64,7 +64,15 @@ def prepare_keywords(
     change: search.Keywords,
     login_customer_id: str | None = None,
 ) -> dict:
-    """Prepare positive keywords, manual bids/status or campaign/group negatives."""
+    """Prepare positive keywords, manual bids/status or campaign/group negatives.
+
+    MEDIA BUYING & GOVERNANCE RULES:
+    1. Hard Limit: Every keyword text must contain at most 10 words (Google Ads hard constraint).
+    2. Ad Group Negatives (ad_group_id): Use strictly for Traffic Sculpting (directing search intent
+       to the single most relevant ad group/creative and preventing internal cannibalization).
+    3. Campaign Negatives (campaign_id): Use strictly for Macro Budget Protection (blocking universal
+       bleeders, zero-intent terms, and budget leakage across the entire campaign).
+    """
     return search.prepare(
         customer_id, login_customer_id, change, search.keywords
     )
