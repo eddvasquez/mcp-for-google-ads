@@ -148,6 +148,11 @@ def apply_proposal(plan_id: str, confirmed: bool = False) -> dict:
 
     Client is responsible for human approval. Never auto-confirm, apply an
     undisplayed proposal or retry an UNKNOWN/APPLYING/UNVERIFIED outcome.
+
+    The daily keyword executor may retain approval of an exact canonical operation
+    contract when only a technical proposal ID changes. Its client must prove
+    payload equivalence, no uncertain dispatch and fresh validation. A content or
+    activation-phase change still requires new human approval.
     """
     return changes.apply(plan_id, confirmed)
 

@@ -185,3 +185,21 @@ GOOGLE_APPLICATION_CREDENTIALS = "C:/ruta/a/credenciales.json"
 * **Autor:** Edd Vásquez. Todos los derechos reservados.
 * **Descargo de responsabilidad:** *MCP for Google Ads* es un proyecto independiente de código abierto. No está afiliado, respaldado ni patrocinado por Google LLC. *Google Ads* es una marca registrada de Google LLC.
 * **Licencia:** Apache License 2.0. Ver [LICENSE](LICENSE) para más detalles.
+
+
+### Recuperación del ejecutor diario de palabras clave
+
+La skill central google-ads-palabras-clave-nuevas consume las funciones locales del
+mismo backend que exponen las herramientas MCP. No hay un segundo transporte MCP
+ni lógica publicitaria duplicada. El modelo aporta selección comercial; el motor
+mantenido ejecuta publish/resume/reconcile y conserva SQLite local fuera de Git.
+
+El preflight distingue EXPIRED, PREFLIGHT_RETRYABLE (NOT_SENT) y REJECTED. Solo las
+lecturas y validate_only temporales admiten tres intentos con espera exponencial.
+La mutación real nunca se reintenta automáticamente; UNKNOWN/APPLYING/UNVERIFIED
+requieren reconciliación en lectura. Los estados previos siguen siendo compatibles.
+
+El cliente puede conservar consentimiento para un contrato exacto de operaciones
+si solo renueva IDs técnicos y demuestra contenido idéntico, ausencia de envío
+incierto y validación vigente. No equivale a aprobación automática: palabras,
+destinos, concordancias, estados y activación distintos requieren consentimiento.

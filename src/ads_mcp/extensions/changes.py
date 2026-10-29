@@ -13,6 +13,7 @@ import re
 import sqlite3
 import time
 import uuid
+import random
 from decimal import Decimal, InvalidOperation
 
 from fastmcp.exceptions import ToolError
@@ -320,6 +321,25 @@ def verify(body, resource_names):
     )
 
 
+class ProposalExpired(ToolError):
+    """No mutation was dispatched; the exact content may be revalidated."""
+
+
+def transient_preflight(exc):
+    return isinstance(exc, (api_errors.ServiceUnavailable, api_errors.DeadlineExceeded,
+                            api_errors.ResourceExhausted, ConnectionError, TimeoutError))
+
+
+def preflight_read(call):
+    for attempt in range(3):
+        try:
+            return call()
+        except Exception as exc:
+            if not transient_preflight(exc) or attempt == 2:
+                raise
+            time.sleep(.25 * 2 ** attempt + random.uniform(0, .1))
+
+
 def apply(plan_id, confirmed):
     if not confirmed:
         raise ToolError(
@@ -331,22 +351,23 @@ def apply(plan_id, confirmed):
     store.transition(plan_id, "PREPARED", "CHECKING")
     try:
         if time.time() - plan["created"] > 1800:
-            raise ToolError("Proposal expired; prepare a fresh proposal.")
+            raise ProposalExpired("Proposal expired; revalidate the same approved content.")
         for item in body["watches"]:
             if (
-                reread(body["customer_id"], item, body["login_customer_id"])
+                preflight_read(lambda: reread(body["customer_id"], item, body["login_customer_id"]))
                 != item["before"]
             ):
                 raise ToolError("Account changed; prepare a fresh proposal.")
         limits(body["customer_id"], body["currency_code"], body["operations"])
-        mutate(
-            body["customer_id"],
-            body["operations"],
-            body["login_customer_id"],
-            True,
-        )
-    except Exception:
-        store.transition(plan_id, "CHECKING", "REJECTED")
+        preflight_read(lambda: mutate(
+            body["customer_id"], body["operations"], body["login_customer_id"], True
+        ))
+    except Exception as exc:
+        state = "EXPIRED" if isinstance(exc, ProposalExpired) else (
+            "PREFLIGHT_RETRYABLE" if transient_preflight(exc) else "REJECTED")
+        store.transition(plan_id, "CHECKING", state, dict(error=dict(
+            phase="PREFLIGHT", dispatch_certainty="NOT_SENT", retryable=transient_preflight(exc),
+            category=state, type=type(exc).__name__, message=str(exc))))
         raise
     # Persist BEFORE network dispatch. Crashes here remain non-retryable.
     store.transition(plan_id, "CHECKING", "APPLYING")
