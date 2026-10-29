@@ -2,7 +2,7 @@
 
 [English](README.md) · **Español**
 
-# MCP for Google Ads 🚀
+# MCP for Google Ads
 ### El Sistema Operativo de Adquisición, Media Buying y Economía Unitaria para Agentes de IA.
 
 **Deja de operar a ciegas con wrappers de API pasivos y de solo lectura. Audita, gobierna, escala y protege tus cuentas de Google Ads a nivel de clase mundial.**
