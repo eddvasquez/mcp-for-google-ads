@@ -49,3 +49,7 @@ def run_server() -> None:
 
 if __name__ == "__main__":
     run_server()
+
+main = run_server
+main_editing = run_server
+
