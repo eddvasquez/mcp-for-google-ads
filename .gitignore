@@ -40,3 +40,10 @@ venv.bak/
 # OS
 .DS_Store
 Thumbs.db
+
+# Reglas de entorno y arquitectura v2
+migrate_project.*
+setup_project.*
+desktop.ini
+node_modules/
+.venv/
