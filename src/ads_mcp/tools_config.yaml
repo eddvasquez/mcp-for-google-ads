@@ -1,9 +1,11 @@
 # tools_config.yaml
 #
 # Tools configuration for the Google Ads MCP server.
-# Modify this file to enable/disable tool namespaces or set custom prefixes.
+# All 5 namespaces enabled by default: Core, Search, Metadata, Editing, Intelligence.
 
 namespaces:
   customers: true
   search: true
   metadata: true
+  editing: true
+  intelligence: true
