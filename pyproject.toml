@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-for-google-ads"
+version = "1.0.0"
+description = "World-Class Media Buyer & Unit Economics Engine for Google Ads (Model Context Protocol)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+    { name = "Edd Vásquez", email = "eddisonv@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "fastmcp>=2.0.0",
+    "google-ads>=25.0.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+mcp-for-google-ads = "ads_mcp.server:main"
+google-ads-mcp-editing = "ads_mcp.server:main_editing"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ads_mcp"]
