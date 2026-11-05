@@ -35,7 +35,11 @@ Open your AI application's configuration file (e.g., `claude_desktop_config.json
   "mcpServers": {
     "google-ads": {
       "command": "uvx",
-      "args": ["mcp-for-google-ads"],
+      "args": [
+        "--from",
+        "git+https://github.com/eddvasquez/mcp-for-google-ads",
+        "mcp-for-google-ads"
+      ],
       "env": {
         "GOOGLE_ADS_DEVELOPER_TOKEN": "your_developer_token",
         "GOOGLE_ADS_CLIENT_ID": "your_client_id",
@@ -46,6 +50,9 @@ Open your AI application's configuration file (e.g., `claude_desktop_config.json
   }
 }
 ```
+
+> [!TIP]
+> **No manual installation needed:** `uvx` automatically downloads and boots the server directly from GitHub. If you cloned the repository locally, you can alternatively use `"command": "uv"` and `"args": ["--directory", "path/to/mcp-for-google-ads", "run", "mcp-for-google-ads"]`.
 
 ### Step 2: Copy & Paste this Master Prompt into your AI Chat
 
@@ -290,7 +297,7 @@ pip install -e .
 ```toml
 [mcp_servers.google_ads]
 command = "uvx"
-args = ["mcp-for-google-ads"]
+args = ["--from", "git+https://github.com/eddvasquez/mcp-for-google-ads", "mcp-for-google-ads"]
 
 [mcp_servers.google_ads.env]
 GOOGLE_ADS_DEVELOPER_TOKEN = "your_developer_token"

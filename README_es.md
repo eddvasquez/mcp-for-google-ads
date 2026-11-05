@@ -35,7 +35,11 @@ Abre el archivo de configuración de tu aplicación (por ejemplo, `claude_deskto
   "mcpServers": {
     "google-ads": {
       "command": "uvx",
-      "args": ["mcp-for-google-ads"],
+      "args": [
+        "--from",
+        "git+https://github.com/eddvasquez/mcp-for-google-ads",
+        "mcp-for-google-ads"
+      ],
       "env": {
         "GOOGLE_ADS_DEVELOPER_TOKEN": "tu_developer_token",
         "GOOGLE_ADS_CLIENT_ID": "tu_client_id",
@@ -46,6 +50,9 @@ Abre el archivo de configuración de tu aplicación (por ejemplo, `claude_deskto
   }
 }
 ```
+
+> [!TIP]
+> **Sin instalación manual:** `uvx` descarga y levanta el servidor directamente desde GitHub. Si clonaste el repositorio localmente, puedes usar alternativamente `"command": "uv"` y `"args": ["--directory", "ruta/a/mcp-for-google-ads", "run", "mcp-for-google-ads"]`.
 
 ### Paso 2: Copia y Pega Este Prompt en la Ventana de Chat de tu IA
 
@@ -290,7 +297,7 @@ pip install -e .
 ```toml
 [mcp_servers.google_ads]
 command = "uvx"
-args = ["mcp-for-google-ads"]
+args = ["--from", "git+https://github.com/eddvasquez/mcp-for-google-ads", "mcp-for-google-ads"]
 
 [mcp_servers.google_ads.env]
 GOOGLE_ADS_DEVELOPER_TOKEN = "tu_developer_token"
