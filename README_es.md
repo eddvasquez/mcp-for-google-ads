@@ -75,6 +75,7 @@ Este sistema incorpora **Blindaje Transaccional Obligatorio**:
 3. **Confirmación Humana Inmutable:** Solo cuando respondes positivamente, el sistema envía la confirmación final (`confirmed=True`).
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '14px' }, 'sequence': { 'actorFontSize': '14px', 'messageFontSize': '13px', 'noteFontSize': '12px', 'width': 180 }}}%%
 sequenceDiagram
     autonumber
     actor MB as Media Buyer (Usuario)
@@ -126,27 +127,38 @@ En adquisición de alto rendimiento, **más del 40% del presupuesto publicitario
 - **La Solución:** Inyección de conversiones offline calificadas (GCLID) con los datos reales de ventas cerradas por tu equipo comercial o llamadas de WhatsApp.
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '15px' }}}%%
 flowchart TD
-    subgraph POISON ["BUCLE VICIOSO: Envenenamiento Algorítmico Tradicional"]
-        direction TB
-        P1["Google Ads envía Clics"] --> P2["Landing Page genérica"]
-        P2 --> P3["Lead Barato no calificado<br>(Llena formulario sin intención de compra)"]
-        P3 --> P4["Píxel Web registra 'Conversión Exitosa'"]
-        P4 -->|"Google cree que es su cliente ideal y busca más basura"| P1
-        P3 -.-> P5["Ventas Reales en Llamadas / WhatsApp: 0 USD"]
+    subgraph BUCLES ["Comparativa de Modelos de Adquisición"]
+        direction LR
+        subgraph POISON ["BUCLE VICIOSO: Tradicional"]
+            direction TB
+            P1["1. Google Ads envía Clics Baratos"]
+            P2["2. Landing Page Genérica"]
+            P3["3. Lead Barato no calificado<br>(Sin intención de compra)"]
+            P4["4. Píxel Web registra 'Conversión'"]
+            P5["5. Ventas Reales en Llamadas: $0 USD"]
+
+            P1 --> P2 --> P3 --> P4
+            P4 -->|"Google optimiza hacia más basura"| P1
+            P3 -.-> P5
+        end
+
+        subgraph CURE ["BUCLE VIRTUOSO: MCP for Google Ads"]
+            direction TB
+            C1["1. Tráfico de Alta Intención"]
+            C2["2. Landing con Message Match"]
+            C3["3. Prospecto Precalificado"]
+            C4["4. Cierre en Llamada / WhatsApp"]
+            C5["5. Venta con Ticket y Margen Real"]
+            C6["6. MCP inyecta GCLID + Ingreso Real"]
+
+            C1 --> C2 --> C3 --> C4 --> C5 --> C6
+            C6 -->|"Google optimiza hacia Clientes que Pagan"| C1
+        end
     end
 
-    subgraph CURE ["BUCLE VIRTUOSO: MCP for Google Ads + Economía Unitaria"]
-        direction TB
-        C1["Google Ads envía Tráfico Cualificado"] --> C2["Landing con Message Match Auditado"]
-        C2 --> C3["Lead de Alta Intención"]
-        C3 --> C4["Llamada de Venta / WhatsApp"]
-        C4 --> C5["Venta Cerrada con Ticket Real"]
-        C5 -->|"MCP inyecta GCLID + Ingreso Real al Algoritmo"| C6["Google Ads aprende quién compra de verdad"]
-        C6 -->|"Optimización basada en Ganancia Real (P&L)"| C1
-    end
-
-    classDef bad fill:#1e1e24,stroke:#ef4444,stroke-width:1.5px,color:#f8fafc;
+    classDef bad fill:#1e1e24,stroke:#ef4444,stroke-width:2px,color:#f8fafc;
     classDef good fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
     class P1,P2,P3,P4,P5 bad;
     class C1,C2,C3,C4,C5,C6 good;
@@ -171,30 +183,31 @@ flowchart TD
 ## Arquitectura y Protocolo de Adquisición en Siete Fases
 
 ```mermaid
-flowchart LR
-    subgraph NIVEL1 ["NIVEL 1: Salud y Pacing"]
-        direction TB
-        F1["Fase 1: Ritmo y Pacing de Gasto<br>(Evitar sobreconsumo prematuro)"]
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '15px' }}}%%
+flowchart TD
+    subgraph NIVEL1 ["NIVEL 1: Salud y Pacing de Presupuesto"]
+        direction LR
+        F1["Fase 1: Ritmo y Pacing de Gasto<br>(Evitar sobreconsumo y picos prematuros)"]
         F2["Fase 2: Calidad Ad Rank Triad<br>(Diagnóstico de CTR, Relevancia y Landing)"]
     end
 
-    subgraph NIVEL2 ["NIVEL 2: Blindaje de Fugas de Dinero"]
+    subgraph NIVEL2 ["NIVEL 2: Blindaje Forense de Fugas de Dinero"]
         direction TB
-        F3["Fase 3: Gobernanza de Listas Huérfanas<br>(Reconectar listas de negativas dormidas)"]
-        F4["Fase 4: Minería Forense de Search Terms<br>(Extracción y bloqueo de clics sangrantes)"]
-        F5["Fase 5: Message Match Post-Clic<br>(Alineación entre Anuncio y Landing Page)"]
+        F3["Fase 3: Gobernanza de Listas Huérfanas<br>(Reconectar listas de negativas dormidas a campañas)"]
+        F4["Fase 4: Minería Forense de Search Terms<br>(Identificación y bloqueo de consultas sangrantes)"]
+        F5["Fase 5: Message Match Post-Clic<br>(Alineación entre Anuncio RSA y la Promesa de la Landing)"]
     end
 
-    subgraph NIVEL3 ["NIVEL 3: Escalabilidad y Algoritmo"]
-        direction TB
-        F6["Fase 6: Madurez para Smart Bidding<br>(Validar umbral de 30 conversiones/mes)"]
+    subgraph NIVEL3 ["NIVEL 3: Escalabilidad Algorítmica y P&L"]
+        direction LR
+        F6["Fase 6: Madurez para Smart Bidding<br>(Validar umbral estadístico de 30 conversiones/mes)"]
         F7["Fase 7: Retorno Offline CRM<br>(Inyección de ventas cerradas vía GCLID)"]
     end
 
     NIVEL1 ==> NIVEL2 ==> NIVEL3
 
-    classDef n1 fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
-    classDef n2 fill:#0f172a,stroke:#f59e0b,stroke-width:1.5px,color:#f8fafc;
+    classDef n1 fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef n2 fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#f8fafc;
     classDef n3 fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
     class F1,F2 n1;
     class F3,F4,F5 n2;

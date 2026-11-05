@@ -75,6 +75,7 @@ This system incorporates **Mandatory Transactional Safeguards**:
 3. **Immutable Human Authorization:** Only when you reply with explicit confirmation does the system execute the change (`confirmed=True`).
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '14px' }, 'sequence': { 'actorFontSize': '14px', 'messageFontSize': '13px', 'noteFontSize': '12px', 'width': 180 }}}%%
 sequenceDiagram
     autonumber
     actor MB as Media Buyer (User)
@@ -126,27 +127,38 @@ In high-stakes advertising, **more than 40% of spend is silently wasted** due to
 - **The Solution:** Offline qualification uploads (GCLID injection) feeding verified revenue and phone-closed sales back into Google Ads to retrain the algorithm.
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '15px' }}}%%
 flowchart TD
-    subgraph POISON ["VICIOUS LOOP: Traditional Algorithmic Poisoning"]
-        direction TB
-        P1["Google Ads sends Cheap Clicks"] --> P2["Generic Landing Page"]
-        P2 --> P3["Low-Quality Lead fills form<br>(Zero purchase intent)"]
-        P3 --> P4["Web Pixel fires 'Successful Conversion'"]
-        P4 -->|"Google thinks this is the ideal buyer & optimizes for more junk"| P1
-        P3 -.-> P5["Real Sales from Phone Calls / WhatsApp: $0 USD"]
+    subgraph BUCLES ["Acquisition Model Comparison"]
+        direction LR
+        subgraph POISON ["VICIOUS LOOP: Traditional"]
+            direction TB
+            P1["1. Google Ads sends Cheap Clicks"]
+            P2["2. Generic Landing Page"]
+            P3["3. Low-Quality Lead fills form<br>(Zero purchase intent)"]
+            P4["4. Web Pixel fires 'Conversion'"]
+            P5["5. Real Sales from Phone Calls: $0 USD"]
+
+            P1 --> P2 --> P3 --> P4
+            P4 -->|"Google optimizes for more junk"| P1
+            P3 -.-> P5
+        end
+
+        subgraph CURE ["VIRTUOUS LOOP: MCP for Google Ads"]
+            direction TB
+            C1["1. High-Intent Traffic"]
+            C2["2. Landing with Message Match"]
+            C3["3. High-Value Qualified Lead"]
+            C4["4. Sales Call / WhatsApp Closing"]
+            C5["5. Closed Deal with Real Revenue"]
+            C6["6. MCP injects GCLID + Actual Value"]
+
+            C1 --> C2 --> C3 --> C4 --> C5 --> C6
+            C6 -->|"Google optimizes for Paying Customers"| C1
+        end
     end
 
-    subgraph CURE ["VIRTUOUS LOOP: MCP for Google Ads + Unit Economics"]
-        direction TB
-        C1["Google Ads sends High-Intent Traffic"] --> C2["Landing Page with Audited Message Match"]
-        C2 --> C3["High-Value Qualified Lead"]
-        C3 --> C4["Sales Call / WhatsApp Closing"]
-        C4 --> C5["Closed Deal with Real Revenue"]
-        C5 -->|"MCP injects GCLID + Actual Value back to Google"| C6["Google Ads learns who actually buys"]
-        C6 -->|"Optimization anchored to Real P&L Profit"| C1
-    end
-
-    classDef bad fill:#1e1e24,stroke:#ef4444,stroke-width:1.5px,color:#f8fafc;
+    classDef bad fill:#1e1e24,stroke:#ef4444,stroke-width:2px,color:#f8fafc;
     classDef good fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
     class P1,P2,P3,P4,P5 bad;
     class C1,C2,C3,C4,C5,C6 good;
@@ -171,9 +183,10 @@ flowchart TD
 ## Architecture & 7-Phase Media Buyer Protocol
 
 ```mermaid
-flowchart LR
+%%{init: {'theme': 'dark', 'themeVariables': { 'fontSize': '15px' }}}%%
+flowchart TD
     subgraph TIER1 ["TIER 1: Financial Health & Pacing"]
-        direction TB
+        direction LR
         F1["Phase 1: Spend Velocity & Pacing<br>(Prevent premature budget depletion)"]
         F2["Phase 2: Ad Rank Quality Triad<br>(Diagnostics across CTR, Relevance & Landing)"]
     end
@@ -186,15 +199,15 @@ flowchart LR
     end
 
     subgraph TIER3 ["TIER 3: Algorithmic Scaling & P&L"]
-        direction TB
+        direction LR
         F6["Phase 6: Smart Bidding Readiness<br>(Validate 30-conversion/month threshold)"]
         F7["Phase 7: Offline CRM Revenue Feedback<br>(Inject phone-closed deals via GCLID)"]
     end
 
     TIER1 ==> TIER2 ==> TIER3
 
-    classDef n1 fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
-    classDef n2 fill:#0f172a,stroke:#f59e0b,stroke-width:1.5px,color:#f8fafc;
+    classDef n1 fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef n2 fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#f8fafc;
     classDef n3 fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
     class F1,F2 n1;
     class F3,F4,F5 n2;
