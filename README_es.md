@@ -24,7 +24,42 @@
 
 ---
 
-## 💡 ¿Por Qué MCP for Google Ads?
+## Inicio Rápido
+
+### Para Usuarios No Programadores (Copiar y Pegar en el Chat de tu IA)
+
+Si no deseas manipular terminales ni entornos de desarrollo, copia y pega el siguiente bloque directamente en el chat de Claude Desktop, ChatGPT o Antigravity (una vez registrado el MCP en tu configuración):
+
+```text
+Actúa como mi Media Buyer de Clase Mundial y Consultor Senior de Adquisición en Google Ads.
+
+Tienes a tu disposición el servidor 'mcp-for-google-ads' (https://github.com/eddvasquez/mcp-for-google-ads).
+
+Quiero que operemos con rigor inquebrantable bajo el protocolo estricto de Two-Phase Commit:
+1. Prohibido aplicar mutaciones en vivo (presupuestos, negativas, campañas) sin antes ejecutar una simulación previa con validate_only=True y presentarme el impacto proyectado para recibir mi aprobación expresa.
+2. Inicia realizando la Fase 1: Auditoría de Pacing y Salud de Presupuesto en mi cuenta (Customer ID: [PEGA_AQUÍ_TU_CUSTOMER_ID_SIN_GUIONES]).
+3. Identifica cualquier fuga de inversión o listas compartidas huérfanas antes de sugerir cambios de puja.
+```
+
+---
+
+## Inicio Rápido para No Programadores (Copiar y Pegar en el Chat de tu IA)
+
+Si no deseas utilizar la terminal ni gestionar entornos virtuales locales, copia y pega el siguiente bloque directamente en Claude Desktop, ChatGPT o Antigravity una vez registrado el servidor MCP:
+
+\\	ext
+Actúa como mi Media Buyer de Clase Mundial y Consultor Senior de Adquisición en Google Ads.
+
+Tienes a tu disposición el servidor 'mcp-for-google-ads' (https://github.com/eddvasquez/mcp-for-google-ads).
+
+Quiero que operemos con rigor inquebrantable bajo el protocolo estricto de Two-Phase Commit:
+1. Prohibido aplicar mutaciones en vivo (presupuestos, negativas, campañas) sin antes ejecutar una simulación previa con validate_only=True y presentarme el impacto proyectado para recibir mi aprobación expresa.
+2. Inicia realizando la Fase 1: Auditoría de Pacing y Salud de Presupuesto en mi cuenta (Customer ID: [PEGA_AQUÍ_TU_CUSTOMER_ID_SIN_GUIONES]).
+3. Identifica cualquier fuga de inversión o listas compartidas huérfanas antes de sugerir cambios de puja.
+\
+---
+
+## ¿Por Qué MCP for Google Ads?
 
 La mayoría de herramientas de IA para Google Ads son lectores pasivos que consultan tablas básicas. En adquisición de alto rendimiento, **el 85% de las fugas de presupuesto ocurren post-clic o mediante sangrado silencioso en subastas**.
 
@@ -41,7 +76,7 @@ La mayoría de herramientas de IA para Google Ads son lectores pasivos que consu
 
 ---
 
-## 🏗️ Arquitectura y Flujo de Adquisición
+## Arquitectura y Flujo de Adquisición
 
 ```mermaid
 flowchart TD
@@ -65,7 +100,7 @@ flowchart TD
 
 ---
 
-## 🛠️ El Sistema Operativo de 37 Herramientas
+## El Sistema Operativo de 37 Herramientas
 
 <details open>
 <summary><b>1. Descubrimiento de Cuentas y Consultas GAQL Directas (3 Herramientas)</b></summary>
@@ -121,7 +156,7 @@ flowchart TD
 
 ---
 
-## 🛡️ Seguridad Two-Phase Commit
+## Seguridad Two-Phase Commit
 
 A diferencia de bots novatos que ejecutan mutaciones directamente en producción, **MCP for Google Ads** exige un ciclo de confirmación inmutable:
 
@@ -145,7 +180,7 @@ sequenceDiagram
 
 ---
 
-## ⚡ Configuración del Cliente
+## Configuración del Cliente
 
 ### Claude Desktop (`claude_desktop_config.json`)
 
@@ -180,12 +215,14 @@ GOOGLE_APPLICATION_CREDENTIALS = "C:/ruta/a/credenciales.json"
 
 ---
 
-## 🔒 Aviso Legal y Marcas Registradas
+## Aviso Legal, Marcas Registradas y Deslinde de Responsabilidad Financiera
 
 * **Autor:** Edd Vásquez. Todos los derechos reservados.
-* **Descargo de responsabilidad:** *MCP for Google Ads* es un proyecto independiente de código abierto. No está afiliado, respaldado ni patrocinado por Google LLC. *Google Ads* es una marca registrada de Google LLC.
-* **Licencia:** Apache License 2.0. Ver [LICENSE](LICENSE) para más detalles.
+* **Licencia:** Distribuido bajo [Apache License 2.0](LICENSE).
+* **Marcas Registradas:** *Google Ads* es una marca registrada de Google LLC. *MCP for Google Ads* es un proyecto independiente de código abierto y no está afiliado, respaldado, patrocinado ni certificado por Google LLC.
+* **Descargo de Responsabilidad Publicitaria y Financiera:** Este software interactúa directamente con la API de Google Ads y puede consultar o modificar presupuestos, pujas, estados de campañas y términos de búsqueda que conllevan gastos económicos reales en cuentas publicitarias. Aunque el sistema implementa protocolos de seguridad (Two-Phase Commit con \alidate_only=True\), el usuario final es el único y exclusivo responsable de auditar, verificar y autorizar cualquier cambio de gasto o estado en sus cuentas. El autor y los colaboradores no asumen responsabilidad alguna por pérdidas financieras, cargos en tarjetas de crédito, suspensiones de cuentas publicitarias o rendimientos comerciales derivados del uso de este software.
 
+---
 
 ### Recuperación del ejecutor diario de palabras clave
 

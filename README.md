@@ -24,7 +24,23 @@
 
 ---
 
-## 💡 Why MCP for Google Ads?
+## Quick Start for Non-Programmers (Copy & Paste into AI Chat)
+
+If you prefer not to use the terminal or manage local developer environments, copy and paste this prompt directly into Claude Desktop, ChatGPT, or Antigravity once the MCP server is configured:
+
+\\	ext
+Act as my World-Class Media Buyer & Senior Google Ads Consultant.
+
+You have access to the 'mcp-for-google-ads' server (https://github.com/eddvasquez/mcp-for-google-ads).
+
+We operate strictly under the Two-Phase Commit protocol:
+1. Never apply mutations in live campaigns (budgets, negatives, statuses) without first performing a dry run using validate_only=True and presenting the projected financial impact for my explicit authorization.
+2. Begin by executing Phase 1: Financial Pacing & Health Audit on my account (Customer ID: [PASTE_YOUR_CUSTOMER_ID_HERE_WITHOUT_HYPHENS]).
+3. Identify silent budget bleeders and orphaned shared negative lists before suggesting bidding adjustments.
+\
+---
+
+## Why MCP for Google Ads?
 
 Most Google Ads AI tools are naive read-only wrappers that query basic campaign tables. In high-stakes acquisition, **85% of budget loss happens post-click or through silent auction bleeding**.
 
@@ -41,7 +57,7 @@ Most Google Ads AI tools are naive read-only wrappers that query basic campaign 
 
 ---
 
-## 🏗️ Architecture & Acquisition Engine
+## Architecture & Acquisition Engine
 
 ```mermaid
 flowchart TD
@@ -65,7 +81,7 @@ flowchart TD
 
 ---
 
-## 🛠️ The 37-Tool Operating System
+## The 37-Tool Operating System
 
 <details open>
 <summary><b>1. Account Discovery & Direct GAQL (3 Tools)</b></summary>
@@ -121,7 +137,7 @@ flowchart TD
 
 ---
 
-## 🛡️ Two-Phase Commit Safety
+## Two-Phase Commit Safety
 
 Unlike naive bots that write directly to production, **MCP for Google Ads** enforces a strict safety protocol:
 
@@ -145,7 +161,7 @@ sequenceDiagram
 
 ---
 
-## ⚡ Client Configuration
+## Client Configuration
 
 ### Claude Desktop (`claude_desktop_config.json`)
 
@@ -180,8 +196,9 @@ GOOGLE_APPLICATION_CREDENTIALS = "C:/path/to/credentials.json"
 
 ---
 
-## 🔒 Legal Notice & Trademark Disclaimer
+## Legal Notice, Trademark & Financial Liability Disclaimer
 
 * **Author:** Edd Vásquez. All rights reserved.
-* **Disclaimer:** *MCP for Google Ads* is an independent open-source project. It is **not** affiliated with, endorsed by, or sponsored by Google LLC. *Google Ads* is a registered trademark of Google LLC.
-* **License:** Apache License 2.0. See [LICENSE](LICENSE) for details.
+* **License:** Distributed under [Apache License 2.0](LICENSE).
+* **Trademark Disclaimer:** *Google Ads* is a registered trademark of Google LLC. *MCP for Google Ads* is an independent open-source project and is not affiliated with, endorsed by, sponsored by, or certified by Google LLC.
+* **Financial & Advertising Liability Disclaimer:** This software interacts directly with live Google Ads accounts and billing APIs. It can query, modify, and mutate campaign budgets, bids, negative keyword sets, and statuses that generate real financial expenditures. Although strict safeguards are built-in (Two-Phase Commit with \alidate_only=True\), the end user assumes sole and exclusive responsibility for auditing, verifying, and authorizing all budget and spending decisions. The author and contributors accept no liability whatsoever for financial losses, unexpected billing charges, account suspensions, or commercial outcomes resulting from the use of this software.
