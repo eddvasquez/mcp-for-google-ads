@@ -74,6 +74,35 @@ Este sistema incorpora **Blindaje Transaccional Obligatorio**:
 2. **Reporte de Impacto Financiero:** La IA te presenta en el chat la propuesta exacta, el impacto proyectado en tu P&L y el cambio de estado.
 3. **Confirmación Humana Inmutable:** Solo cuando respondes positivamente, el sistema envía la confirmación final (`confirmed=True`).
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor MB as Media Buyer (Usuario)
+    participant IA as Agente de IA (Claude / ChatGPT / Antigravity)
+    participant MCP as Servidor MCP (Google Ads)
+    participant API as API de Google Ads (Subasta en Vivo)
+
+    MB->>IA: "Ajusta el presupuesto diario de la campaña X a 150 USD"
+    Note over IA,MCP: FASE 1: SIMULACIÓN AISLADA (ZERO RIESGO)
+    IA->>MCP: editing_prepare_budget (validate_only=True)
+    MCP->>API: Valida sintaxis, límites y políticas (Dry-Run)
+    API-->>MCP: Retorna: Simulación Exitosa (Sin cobro ni cambios en subasta)
+    MCP-->>IA: Genera propuesta estructurada (Diff + Impacto financiero)
+    IA->>MB: Muestra reporte exacto: "Presupuesto actual: $100 -> Propuesto: $150. ¿Confirmas?"
+
+    Note over MB,API: FASE 2: AUTORIZACIÓN HUMANA EXPLÍCITA
+    alt Usuario rechaza o pide ajustes
+        MB-->>IA: "No, cancela la propuesta"
+        IA->>MCP: editing_cancel_proposal
+        Note over API: Cero cambios aplicados. Presupuesto intacto.
+    else Usuario aprueba
+        MB-->>IA: "Aprobado, procede"
+        IA->>MCP: editing_apply_proposal (confirmed=True)
+        MCP->>API: Ejecuta mutación real en producción
+        API-->>MB: Confirmación inmutable registrada
+    end
+```
+
 ---
 
 ## Las Cuatro Fugas Silenciosas que Destruyen tu Rentabilidad
@@ -96,6 +125,33 @@ En adquisición de alto rendimiento, **más del 40% del presupuesto publicitario
 - **El Problema:** Google optimiza hacia leads baratos que llenan formularios superficiales pero nunca compran. El algoritmo recibe retroalimentación de baja calidad y atrae prospectos no calificados.
 - **La Solución:** Inyección de conversiones offline calificadas (GCLID) con los datos reales de ventas cerradas por tu equipo comercial o llamadas de WhatsApp.
 
+```mermaid
+flowchart TD
+    subgraph POISON ["BUCLE VICIOSO: Envenenamiento Algorítmico Tradicional"]
+        direction TB
+        P1["Google Ads envía Clics"] --> P2["Landing Page genérica"]
+        P2 --> P3["Lead Barato no calificado<br>(Llena formulario sin intención de compra)"]
+        P3 --> P4["Píxel Web registra 'Conversión Exitosa'"]
+        P4 -->|"Google cree que es su cliente ideal y busca más basura"| P1
+        P3 -.-> P5["Ventas Reales en Llamadas / WhatsApp: 0 USD"]
+    end
+
+    subgraph CURE ["BUCLE VIRTUOSO: MCP for Google Ads + Economía Unitaria"]
+        direction TB
+        C1["Google Ads envía Tráfico Cualificado"] --> C2["Landing con Message Match Auditado"]
+        C2 --> C3["Lead de Alta Intención"]
+        C3 --> C4["Llamada de Venta / WhatsApp"]
+        C4 --> C5["Venta Cerrada con Ticket Real"]
+        C5 -->|"MCP inyecta GCLID + Ingreso Real al Algoritmo"| C6["Google Ads aprende quién compra de verdad"]
+        C6 -->|"Optimización basada en Ganancia Real (P&L)"| C1
+    end
+
+    classDef bad fill:#1e1e24,stroke:#ef4444,stroke-width:1.5px,color:#f8fafc;
+    classDef good fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    class P1,P2,P3,P4,P5 bad;
+    class C1,C2,C3,C4,C5,C6 good;
+```
+
 ---
 
 ## ¿Por Qué MCP for Google Ads?
@@ -115,28 +171,34 @@ En adquisición de alto rendimiento, **más del 40% del presupuesto publicitario
 ## Arquitectura y Protocolo de Adquisición en Siete Fases
 
 ```mermaid
-flowchart TD
-    subgraph Engine ["Arquitectura MCP for Google Ads"]
+flowchart LR
+    subgraph NIVEL1 ["NIVEL 1: Salud y Pacing"]
         direction TB
-        A["1. Auditoría y GAQL<br>(3 Herramientas de Descubrimiento)"] --> B["2. Mutaciones Blindadas<br>(12 Herramientas Two-Phase Commit)"]
-        B --> C["3. Inteligencia y Estrategia<br>(22 Herramientas de Economía Unitaria)"]
+        F1["Fase 1: Ritmo y Pacing de Gasto<br>(Evitar sobreconsumo prematuro)"]
+        F2["Fase 2: Calidad Ad Rank Triad<br>(Diagnóstico de CTR, Relevancia y Landing)"]
     end
 
-    subgraph Workflow ["Protocolo de Media Buyer en 7 Fases"]
-        W1["Fase 1: Ritmo y Pacing de Presupuesto"] --> W2["Fase 2: Calidad y Ad Rank Triad"]
-        W2 --> W3["Fase 3: Gobernanza de Listas Huérfanas"]
-        W3 --> W4["Fase 4: Minería Forense de Search Terms"]
-        W4 --> W5["Fase 5: Message Match en Landing Page"]
-        W5 --> W6["Fase 6: Madurez para Smart Bidding"]
-        W6 --> W7["Fase 7: Retorno de Conversiones Offline CRM"]
+    subgraph NIVEL2 ["NIVEL 2: Blindaje de Fugas de Dinero"]
+        direction TB
+        F3["Fase 3: Gobernanza de Listas Huérfanas<br>(Reconectar listas de negativas dormidas)"]
+        F4["Fase 4: Minería Forense de Search Terms<br>(Extracción y bloqueo de clics sangrantes)"]
+        F5["Fase 5: Message Match Post-Clic<br>(Alineación entre Anuncio y Landing Page)"]
     end
 
-    Engine -.-> Workflow
+    subgraph NIVEL3 ["NIVEL 3: Escalabilidad y Algoritmo"]
+        direction TB
+        F6["Fase 6: Madurez para Smart Bidding<br>(Validar umbral de 30 conversiones/mes)"]
+        F7["Fase 7: Retorno Offline CRM<br>(Inyección de ventas cerradas vía GCLID)"]
+    end
 
-    classDef core fill:#1e293b,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
-    classDef flow fill:#0f172a,stroke:#34d399,stroke-width:1.5px,color:#f8fafc;
-    class A,B,C core;
-    class W1,W2,W3,W4,W5,W6,W7 flow;
+    NIVEL1 ==> NIVEL2 ==> NIVEL3
+
+    classDef n1 fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
+    classDef n2 fill:#0f172a,stroke:#f59e0b,stroke-width:1.5px,color:#f8fafc;
+    classDef n3 fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    class F1,F2 n1;
+    class F3,F4,F5 n2;
+    class F6,F7 n3;
 ```
 
 ---

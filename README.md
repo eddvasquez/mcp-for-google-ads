@@ -74,6 +74,35 @@ This system incorporates **Mandatory Transactional Safeguards**:
 2. **Financial Impact Report:** The AI presents the exact proposed diff in chat, showing the projected P&L impact.
 3. **Immutable Human Authorization:** Only when you reply with explicit confirmation does the system execute the change (`confirmed=True`).
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor MB as Media Buyer (User)
+    participant IA as AI Coding Agent (Claude / ChatGPT / Antigravity)
+    participant MCP as MCP Server (Google Ads)
+    participant API as Google Ads API (Live Auction)
+
+    MB->>IA: "Set daily budget for campaign X to $150 USD"
+    Note over IA,MCP: PHASE 1: ISOLATED DRY-RUN (ZERO FINANCIAL RISK)
+    IA->>MCP: editing_prepare_budget (validate_only=True)
+    MCP->>API: Validates syntax, limits, and policy (Dry-Run)
+    API-->>MCP: Returns: Simulation Successful (No debit, no auction changes)
+    MCP-->>IA: Generates structured proposal (Diff + Financial Impact)
+    IA->>MB: Displays exact report: "Current: $100 -> Proposed: $150. Confirm?"
+
+    Note over MB,API: PHASE 2: EXPLICIT HUMAN AUTHORIZATION
+    alt User rejects or requests modifications
+        MB-->>IA: "No, cancel proposal"
+        IA->>MCP: editing_cancel_proposal
+        Note over API: Zero changes applied. Budget untouched.
+    else User approves
+        MB-->>IA: "Approved, proceed"
+        IA->>MCP: editing_apply_proposal (confirmed=True)
+        MCP->>API: Executes live production mutation
+        API-->>MB: Immutable confirmation registered
+    end
+```
+
 ---
 
 ## The Four Silent Budget Bleeders Destroying your ROAS
@@ -96,6 +125,33 @@ In high-stakes advertising, **more than 40% of spend is silently wasted** due to
 - **The Problem:** Google optimizes toward low-cost leads that submit spam form fills but never buy. The bidding algorithm receives dirty feedback and continues acquiring unqualified traffic.
 - **The Solution:** Offline qualification uploads (GCLID injection) feeding verified revenue and phone-closed sales back into Google Ads to retrain the algorithm.
 
+```mermaid
+flowchart TD
+    subgraph POISON ["VICIOUS LOOP: Traditional Algorithmic Poisoning"]
+        direction TB
+        P1["Google Ads sends Cheap Clicks"] --> P2["Generic Landing Page"]
+        P2 --> P3["Low-Quality Lead fills form<br>(Zero purchase intent)"]
+        P3 --> P4["Web Pixel fires 'Successful Conversion'"]
+        P4 -->|"Google thinks this is the ideal buyer & optimizes for more junk"| P1
+        P3 -.-> P5["Real Sales from Phone Calls / WhatsApp: $0 USD"]
+    end
+
+    subgraph CURE ["VIRTUOUS LOOP: MCP for Google Ads + Unit Economics"]
+        direction TB
+        C1["Google Ads sends High-Intent Traffic"] --> C2["Landing Page with Audited Message Match"]
+        C2 --> C3["High-Value Qualified Lead"]
+        C3 --> C4["Sales Call / WhatsApp Closing"]
+        C4 --> C5["Closed Deal with Real Revenue"]
+        C5 -->|"MCP injects GCLID + Actual Value back to Google"| C6["Google Ads learns who actually buys"]
+        C6 -->|"Optimization anchored to Real P&L Profit"| C1
+    end
+
+    classDef bad fill:#1e1e24,stroke:#ef4444,stroke-width:1.5px,color:#f8fafc;
+    classDef good fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    class P1,P2,P3,P4,P5 bad;
+    class C1,C2,C3,C4,C5,C6 good;
+```
+
 ---
 
 ## Why MCP for Google Ads?
@@ -115,28 +171,34 @@ In high-stakes advertising, **more than 40% of spend is silently wasted** due to
 ## Architecture & 7-Phase Media Buyer Protocol
 
 ```mermaid
-flowchart TD
-    subgraph Engine ["MCP for Google Ads Architecture"]
+flowchart LR
+    subgraph TIER1 ["TIER 1: Financial Health & Pacing"]
         direction TB
-        A["1. Discovery & GAQL<br>(3 Core Tools)"] --> B["2. Transactional Mutations<br>(12 Two-Phase Commit Tools)"]
-        B --> C["3. Intelligence & Strategy<br>(22 Unit Economics Tools)"]
+        F1["Phase 1: Spend Velocity & Pacing<br>(Prevent premature budget depletion)"]
+        F2["Phase 2: Ad Rank Quality Triad<br>(Diagnostics across CTR, Relevance & Landing)"]
     end
 
-    subgraph Workflow ["7-Phase Media Buyer Protocol"]
-        W1["Phase 1: Financial Pacing & Health"] --> W2["Phase 2: Ad Rank & Quality Triad"]
-        W2 --> W3["Phase 3: Orphaned Negative Governance"]
-        W3 --> W4["Phase 4: Forensic Search Term Mining"]
-        W4 --> W5["Phase 5: Landing Page Message Match"]
-        W5 --> W6["Phase 6: Smart Bidding Statistical Readiness"]
-        W6 --> W7["Phase 7: Offline CRM Revenue Feedback"]
+    subgraph TIER2 ["TIER 2: Forensic Budget Protection"]
+        direction TB
+        F3["Phase 3: Orphaned Negative Governance<br>(Reconnect dormant negative keyword lists)"]
+        F4["Phase 4: Forensic Search Term Mining<br>(Identify and block cash-bleeding queries)"]
+        F5["Phase 5: Post-Click Message Match<br>(Alignment between Ad Copy & Landing Page)"]
     end
 
-    Engine -.-> Workflow
+    subgraph TIER3 ["TIER 3: Algorithmic Scaling & P&L"]
+        direction TB
+        F6["Phase 6: Smart Bidding Readiness<br>(Validate 30-conversion/month threshold)"]
+        F7["Phase 7: Offline CRM Revenue Feedback<br>(Inject phone-closed deals via GCLID)"]
+    end
 
-    classDef core fill:#1e293b,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
-    classDef flow fill:#0f172a,stroke:#34d399,stroke-width:1.5px,color:#f8fafc;
-    class A,B,C core;
-    class W1,W2,W3,W4,W5,W6,W7 flow;
+    TIER1 ==> TIER2 ==> TIER3
+
+    classDef n1 fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
+    classDef n2 fill:#0f172a,stroke:#f59e0b,stroke-width:1.5px,color:#f8fafc;
+    classDef n3 fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    class F1,F2 n1;
+    class F3,F4,F5 n2;
+    class F6,F7 n3;
 ```
 
 ---
